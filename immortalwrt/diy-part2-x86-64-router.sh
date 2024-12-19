@@ -149,6 +149,10 @@ default_packages=(
 for package in "${default_packages[@]}"; do
     config_package_add "$package"
 done
+
+# 删除
+# 与libustream-openssl冲突
+config_package_del libwebsockets-full
 ################################################################
 
 # 设置'root'密码为 'password'
