@@ -129,7 +129,7 @@ config_package_add luci-app-socat
 
 #硬件及驱动
 #ipv6helper
-config_package_add ipv6helper
+#config_package_add ipv6helper
 # 虚拟机支持
 config_package_add qemu-ga
 # usb 2.0 3.0 支持
