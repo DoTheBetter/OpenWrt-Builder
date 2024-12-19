@@ -146,7 +146,7 @@ jobs:
         id: tag
         if: steps.compile.outputs.status == 'success' && !cancelled()
         run: |
-          echo "release_tag=${{ env.REPO_NAME }}_${{ env.OpenWrt_ARCH }}_${{ env.OpenWrt_VERSION }}_${{ env.COMPILE_DATE }}" >> ${GITHUB_OUTPUT}
+          echo "release_tag=${{ env.REPO_NAME }}_${{ env.OpenWrt_VERSION }}_${{ env.OpenWrt_ARCH }}_${{ env.COMPILE_DATE }}" >> ${GITHUB_OUTPUT}
           touch release.txt
           echo "
           💻 架构: ${{ env.OpenWrt_ARCH }}
