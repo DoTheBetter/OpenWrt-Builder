@@ -54,13 +54,107 @@ function clean_packages(){
         done
 }
 
+# Git稀疏克隆，只克隆指定目录到本地
+function git_sparse_clone() {
+  branch="$1" repourl="$2" && shift 2
+  git clone --depth=1 -b $branch --single-branch --filter=blob:none --sparse $repourl
+  repodir=$(echo $repourl | awk -F '/' '{print $(NF)}')
+  cd $repodir && git sparse-checkout set $@
+  mkdir -p package/custom
+  mv -f $@ ../package/custom
+  cd .. && rm -rf $repodir
+}
 
-# Add the default password for the 'root' user（Change the empty password to 'password'）
+##########################
+#设置官方默认包https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/64/profiles.json
+default_packages=(
+        "alsa-utils"
+        "autocore"
+        "automount"
+        "base-files"
+        "block-mount"
+        "busybox"
+        "ca-bundle"
+        "default-settings-chn"
+        "dnsmasq-full"
+        "dropbear"
+        "fdisk"
+        "firewall4"
+        "fstools"
+        "grub2-bios-setup"
+        "intel-igpu-firmware-dmc"
+        "ipv6helper"
+        "kmod-8139cp"
+        "kmod-8139too"
+        "kmod-ac97"
+        "kmod-button-hotplug"
+        "kmod-e1000e"
+        "kmod-fs-f2fs"
+        "kmod-i40e"
+        "kmod-igb"
+        "kmod-igbvf"
+        "kmod-igc"
+        "kmod-ixgbe"
+        "kmod-ixgbevf"
+        "kmod-nf-nathelper"
+        "kmod-nf-nathelper-extra"
+        "kmod-nft-offload"
+        "kmod-pcnet32"
+        "kmod-r8101"
+        "kmod-r8125"
+        "kmod-r8126"
+        "kmod-r8168"
+        "kmod-sound-hda-codec-hdmi"
+        "kmod-sound-hda-codec-realtek"
+        "kmod-sound-hda-codec-via"
+        "kmod-sound-hda-core"
+        "kmod-sound-hda-intel"
+        "kmod-sound-i8x0"
+        "kmod-sound-via82xx"
+        "kmod-tulip"
+        "kmod-usb-audio"
+        "kmod-usb-hid"
+        "kmod-usb-net"
+        "kmod-usb-net-asix"
+        "kmod-usb-net-asix-ax88179"
+        "kmod-usb-net-rtl8150"
+        "kmod-usb-net-rtl8152-vendor"
+        "kmod-vmxnet3"
+        "libc"
+        "libgcc"
+        "libustream-openssl"
+        "logd"
+        "luci"
+        "luci-app-opkg"
+        "luci-compat"
+        "luci-lib-base"
+        "luci-lib-ipkg"
+        "mkf2fs"
+        "mtd"
+        "netifd"
+        "nftables"
+        "opkg"
+        "partx-utils"
+        "ppp"
+        "ppp-mod-pppoe"
+        "procd"
+        "procd-seccomp"
+        "procd-ujail"
+        "uci"
+        "uclient-fetch"
+        "urandom-seed"
+        "urngd"
+)
+# 循环调用 config_package_add 函数
+for package in "${default_packages[@]}"; do
+    config_package_add "$package"
+done
+################################################################
+
+# 设置'root'密码为 'password'
 sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
-# 修改默认主题
-sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 
 # 镜像生成
 # 修改分区大小
@@ -100,6 +194,10 @@ config_package_add kmod-tcp-bbr
 # autocore + lm-sensors-detect： cpu 频率、温度
 config_package_add autocore
 config_package_add lm-sensors-detect
+# bash
+config_package_add bash
+# 更改默认 Shell 为 bash
+sed -i 's|/bin/ash|/usr/bin/bash|g' package/base-files/files/etc/passwd
 # nano 替代 vim
 config_package_add nano
 # curl
@@ -133,26 +231,29 @@ config_package_add kmod-usb-net-ipheth
 # 第三方软件包
 mkdir -p package/custom
 git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
+#git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
+# iStore 应用市场 只支持 x86_64 和 arm64 设备
+git_sparse_clone main https://github.com/linkease/istore luci
+
 clean_packages package/custom
 
 # golang
 rm -rf feeds/packages/lang/golang
 mv package/custom/golang feeds/packages/lang/
 
+# argon 主题
+config_package_add luci-theme-argon
+# 修改默认主题
+sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
+
+
 ## 定时任务。重启、关机、重启网络、释放内存、系统清理、网络共享、关闭网络、自动检测断网重连、MWAN3负载均衡检测重连、自定义脚本等10多个功能
 config_package_add luci-app-autotimeset
 config_package_add luci-lib-ipkg
-
 ## 分区扩容。一键自动格式化分区、扩容、自动挂载插件，专为OPENWRT设计，简化OPENWRT在分区挂载上烦锁的操作
 config_package_add luci-app-partexp
-
 #家长控制
 config_package_add luci-app-parentcontrol
 
 ## iStore 应用市场
-echo >> feeds.conf.default
-echo 'src-git istore https://github.com/linkease/istore;main' >> feeds.conf.default
-./scripts/feeds update istore
-./scripts/feeds install -d y -p istore luci-app-store
 config_package_add luci-app-store
-

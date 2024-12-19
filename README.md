@@ -1,6 +1,9 @@
 # OpenWrt-Builder
 基于 [ImmortalWrt](https://github.com/immortalwrt/immortalwrt) 定制编译的主路由、旁路网关，跟随 23.05 分支更新自动编译。
 
+- [ImmortalWrt Firmware Download](https://downloads.immortalwrt.org/)
+- [ImmortalWrt Firmware Selector](https://firmware-selector.immortalwrt.org/)
+
 # 主路由 X86-64
 ## 定制内容
 ### 精简
@@ -11,7 +14,7 @@
 #### 软件：
 
 1. 升级 golang 版本（geodata、xray 等依赖高版本 go）
-2. 添加常用软件：nano、curl
+2. 添加常用软件：bash、nano、curl
 
 #### 服务：
 
