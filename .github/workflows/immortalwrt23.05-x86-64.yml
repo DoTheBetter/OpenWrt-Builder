@@ -13,8 +13,8 @@ env:
   OpenWrt_ARCH: x86-64
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
-  DIY_P1_SH: immortalwrt/diy-part1.sh
-  DIY_P2_SH: immortalwrt/diy-part2-router.sh
+  DIY_P1_SH: immortalwrt/diy-part1-x86-64.sh
+  DIY_P2_SH: immortalwrt/diy-part2-x86-64-router.sh
   TZ: Asia/Shanghai
 
 jobs:
