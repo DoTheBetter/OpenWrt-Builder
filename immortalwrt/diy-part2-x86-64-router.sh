@@ -58,12 +58,97 @@ function clean_packages(){
 function git_sparse_clone() {
   branch="$1" repourl="$2" && shift 2
   git clone --depth=1 -b $branch --single-branch --filter=blob:none --sparse $repourl
-  mkdir -p package/custom
   repodir=$(echo $repourl | awk -F '/' '{print $(NF)}')
   cd $repodir && git sparse-checkout set $@
-  mv -f $@ ../package/custom
+  mv -f $@ ../package
   cd .. && rm -rf $repodir
 }
+
+##########################
+#设置官方默认包https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/64/profiles.json
+default_packages=(
+        "alsa-utils"
+        "autocore"
+        "automount"
+        "base-files"
+        "block-mount"
+        "busybox"
+        "ca-bundle"
+        "default-settings-chn"
+        "dnsmasq-full"
+        "dropbear"
+        "fdisk"
+        "firewall4"
+        "fstools"
+        "grub2-bios-setup"
+        "intel-igpu-firmware-dmc"
+        "ipv6helper"
+        "kmod-8139cp"
+        "kmod-8139too"
+        "kmod-ac97"
+        "kmod-button-hotplug"
+        "kmod-e1000e"
+        "kmod-fs-f2fs"
+        "kmod-i40e"
+        "kmod-igb"
+        "kmod-igbvf"
+        "kmod-igc"
+        "kmod-ixgbe"
+        "kmod-ixgbevf"
+        "kmod-nf-nathelper"
+        "kmod-nf-nathelper-extra"
+        "kmod-nft-offload"
+        "kmod-pcnet32"
+        "kmod-r8101"
+        "kmod-r8125"
+        "kmod-r8126"
+        "kmod-r8168"
+        "kmod-sound-hda-codec-hdmi"
+        "kmod-sound-hda-codec-realtek"
+        "kmod-sound-hda-codec-via"
+        "kmod-sound-hda-core"
+        "kmod-sound-hda-intel"
+        "kmod-sound-i8x0"
+        "kmod-sound-via82xx"
+        "kmod-tulip"
+        "kmod-usb-audio"
+        "kmod-usb-hid"
+        "kmod-usb-net"
+        "kmod-usb-net-asix"
+        "kmod-usb-net-asix-ax88179"
+        "kmod-usb-net-rtl8150"
+        "kmod-usb-net-rtl8152-vendor"
+        "kmod-vmxnet3"
+        "libc"
+        "libgcc"
+        "libustream-openssl"
+        "logd"
+        "luci"
+        "luci-app-opkg"
+        "luci-compat"
+        "luci-lib-base"
+        "luci-lib-ipkg"
+        "mkf2fs"
+        "mtd"
+        "netifd"
+        "nftables"
+        "opkg"
+        "partx-utils"
+        "ppp"
+        "ppp-mod-pppoe"
+        "procd"
+        "procd-seccomp"
+        "procd-ujail"
+        "uci"
+        "uclient-fetch"
+        "urandom-seed"
+        "urngd"
+)
+# 循环调用 config_package_add 函数
+for package in "${default_packages[@]}"; do
+    config_package_add "$package"
+done
+################################################################
 
 # 设置'root'密码为 'password'
 sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
@@ -128,8 +213,6 @@ config_package_add luci-app-vlmcsd
 config_package_add luci-app-socat
 
 #硬件及驱动
-#ipv6helper
-#config_package_add ipv6helper
 # 虚拟机支持
 config_package_add qemu-ga
 # usb 2.0 3.0 支持
@@ -147,10 +230,6 @@ config_package_add kmod-usb-net-ipheth
 # 第三方软件包
 mkdir -p package/custom
 git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
-#git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
-# iStore 应用市场 只支持 x86_64 和 arm64 设备
-git_sparse_clone main https://github.com/linkease/istore luci
-
 clean_packages package/custom
 
 # golang
@@ -171,5 +250,8 @@ config_package_add luci-app-partexp
 #家长控制
 config_package_add luci-app-parentcontrol
 
-## iStore 应用市场
+## iStore 应用市场 只支持 x86_64 和 arm64 设备
+#git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
+git_sparse_clone main https://github.com/linkease/istore-ui app-store-ui
+git_sparse_clone main https://github.com/linkease/istore luci
 config_package_add luci-app-store
