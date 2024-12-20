@@ -1,0 +1,47 @@
+name: Immortalwrt23.05 Update Checker 
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 20 * * *
+
+env:
+  REPO_URL: https://github.com/immortalwrt/immortalwrt
+  REPO_BRANCH: openwrt-23.05
+
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get commit hash
+      id: getHash
+      run: |
+        git clone -b $REPO_BRANCH --single-branch --depth 1 $REPO_URL openwrt
+        cd openwrt
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Compare commit hash
+      id: cacheHash
+      uses: actions/cache@v3
+      with:
+        path: .commitHash
+        key: commitHash_${{ steps.getHash.outputs.commitHash }}
+
+    - name: Save new commit hash
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      run: |
+        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+
+    - name: Create a repository dispatch event
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      uses: peter-evans/repository-dispatch@v2
+      with:
+        event-type: on-update
+
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 2
