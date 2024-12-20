@@ -22,10 +22,11 @@
 2. 添加 ttyd 服务
 3. 添加 kms 服务
 4. 添加 socat 服务
-5. 添加家长控制parentcontrol
-6. 添加多功能定时任务autotimeset
-7. 添加分区扩容工具partexp
-8. 添加 iStore 应用市场
+5. 添加设置向导wizard
+6. 添加家长控制parentcontrol
+7. 添加多功能定时任务autotimeset
+8. 添加分区扩容工具partexp
+9. 添加 iStore 应用市场
 
 #### 硬件驱动：
 
