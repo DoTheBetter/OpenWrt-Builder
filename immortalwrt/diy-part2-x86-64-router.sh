@@ -157,7 +157,7 @@ sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_genera
 # 添加编译时间到版本信息
 sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
 # 添加编译时间到 /etc/banner
-echo "Build Time: $(date +%Y%m%d)" >> package/base-files/files/etc/banner
+#echo "Build Time: $(date +%Y%m%d)" >> package/base-files/files/etc/banner
 
 # 镜像生成
 # 修改分区大小
@@ -253,10 +253,11 @@ config_package_add luci-app-partexp
 #家长控制
 config_package_add luci-app-parentcontrol
 #设置向导
-config_package_add luci-app-netwizard
+#config_package_add luci-app-netwizard
+#网络速度测试
+config_package_add luci-app-netspeedtest
 
 ## iStore 应用市场 只支持 x86_64 和 arm64 设备
-#git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
-#git_sparse_clone main https://github.com/linkease/istore-ui app-store-ui
-git_sparse_clone main https://github.com/linkease/istore luci
-config_package_add luci-app-store
+##git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
+#git_sparse_clone main https://github.com/linkease/istore luci
+#config_package_add luci-app-store
