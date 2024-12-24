@@ -24,7 +24,7 @@ jobs:
 
     - name: Compare commit hash
       id: cacheHash
-      uses: actions/cache@v3
+      uses: actions/cache/restore@v4
       with:
         path: .commitHash
         key: commitHash_${{ steps.getHash.outputs.commitHash }}
@@ -36,7 +36,7 @@ jobs:
 
     - name: Create a repository dispatch event
       if: steps.cacheHash.outputs.cache-hit != 'true'
-      uses: peter-evans/repository-dispatch@v2
+      uses: peter-evans/repository-dispatch@v3
       with:
         event-type: on-update
 
