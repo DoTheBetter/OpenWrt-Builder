@@ -24,7 +24,7 @@ jobs:
 
     - name: Compare commit hash
       id: cacheHash
-      uses: actions/cache/restore@v4
+      uses: actions/cache@v4
       with:
         path: .commitHash
         key: commitHash_${{ steps.getHash.outputs.commitHash }}
