@@ -1,9 +1,9 @@
 # OpenWrt-Builder
 基于ImmortalWrt定制编译的主路由、旁路网关，跟随 23.05 分支更新自动编译。
 
-本仓库地址：https://github.com/DoTheBetter/OpenWrt-Builder
+本仓库地址：[https://github.com/DoTheBetter/OpenWrt-Builder](https://github.com/DoTheBetter/OpenWrt-Builder)
 
-官方仓库地址：https://github.com/immortalwrt/immortalwrt
+官方仓库地址：[https://github.com/immortalwrt/immortalwrt](https://github.com/immortalwrt/immortalwrt)
 
 官方固件下载地址：
 - [ImmortalWrt Firmware Download](https://downloads.immortalwrt.org/)
