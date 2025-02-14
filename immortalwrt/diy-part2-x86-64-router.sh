@@ -240,9 +240,10 @@ config_package_add luci-lib-ipkg
 config_package_add luci-app-partexp
 #家长控制
 config_package_add snmpd
-config_package_add iptables
-config_package_add kmod-ipt-nat
-config_package_add kmod-nf-nat
+config_package_add iptables-nft
+config_package_add arptables-nft
+config_package_add ebtables-nft
+config_package_add xtables-nft
 config_package_add luci-app-parentcontrol
 #设置向导
 #config_package_add luci-app-netwizard
