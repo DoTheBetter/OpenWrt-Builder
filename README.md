@@ -1,5 +1,5 @@
 # OpenWrt-Builder
-基于ImmortalWrt定制编译的主路由、旁路网关，跟随 23.05 分支更新自动编译。
+基于ImmortalWrt定制编译的主路由、旁路网关，跟随 24.10 分支更新自动编译。
 
 本仓库地址：[https://github.com/DoTheBetter/OpenWrt-Builder](https://github.com/DoTheBetter/OpenWrt-Builder)
 

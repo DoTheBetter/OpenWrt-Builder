@@ -65,14 +65,12 @@ function git_sparse_clone() {
 }
 
 ##########################
-#设置官方默认包https://downloads.immortalwrt.org/releases/23.05.4/targets/x86/64/profiles.json
+#设置官方默认包https://downloads.immortalwrt.org/releases/24.10.0/targets/x86/64/profiles.json
 default_packages=(
-        "alsa-utils"
         "autocore"
         "automount"
         "base-files"
         "block-mount"
-        "busybox"
         "ca-bundle"
         "default-settings-chn"
         "dnsmasq-full"
@@ -81,11 +79,9 @@ default_packages=(
         "firewall4"
         "fstools"
         "grub2-bios-setup"
-        "intel-igpu-firmware-dmc"
-        "ipv6helper"
+        "i915-firmware-dmc"
         "kmod-8139cp"
         "kmod-8139too"
-        "kmod-ac97"
         "kmod-button-hotplug"
         "kmod-e1000e"
         "kmod-fs-f2fs"
@@ -103,15 +99,7 @@ default_packages=(
         "kmod-r8125"
         "kmod-r8126"
         "kmod-r8168"
-        "kmod-sound-hda-codec-hdmi"
-        "kmod-sound-hda-codec-realtek"
-        "kmod-sound-hda-codec-via"
-        "kmod-sound-hda-core"
-        "kmod-sound-hda-intel"
-        "kmod-sound-i8x0"
-        "kmod-sound-via82xx"
         "kmod-tulip"
-        "kmod-usb-audio"
         "kmod-usb-hid"
         "kmod-usb-net"
         "kmod-usb-net-asix"
@@ -123,21 +111,21 @@ default_packages=(
         "libgcc"
         "libustream-openssl"
         "logd"
-        "luci"
-        "luci-app-opkg"
+        "luci-app-package-manager"
         "luci-compat"
         "luci-lib-base"
         "luci-lib-ipkg"
+        "luci-light"
         "mkf2fs"
         "mtd"
         "netifd"
         "nftables"
+        "odhcp6c"
+        "odhcpd-ipv6only"
         "opkg"
         "partx-utils"
         "ppp"
         "ppp-mod-pppoe"
-        "procd"
-        "procd-seccomp"
         "procd-ujail"
         "uci"
         "uclient-fetch"
@@ -251,6 +239,10 @@ config_package_add luci-lib-ipkg
 ## 分区扩容。一键自动格式化分区、扩容、自动挂载插件，专为OPENWRT设计，简化OPENWRT在分区挂载上烦锁的操作
 config_package_add luci-app-partexp
 #家长控制
+config_package_add snmpd
+config_package_add iptables
+config_package_add kmod-ipt-nat
+config_package_add kmod-nf-nat
 config_package_add luci-app-parentcontrol
 #设置向导
 #config_package_add luci-app-netwizard
