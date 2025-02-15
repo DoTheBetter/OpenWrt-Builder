@@ -239,14 +239,8 @@ config_package_add luci-lib-ipkg
 ## 分区扩容。一键自动格式化分区、扩容、自动挂载插件，专为OPENWRT设计，简化OPENWRT在分区挂载上烦锁的操作
 config_package_add luci-app-partexp
 #家长控制
-#config_package_add snmpd
-#config_package_add iptables-nft
-#config_package_add arptables-nft
-#config_package_add ebtables-nft
-#config_package_add xtables-nft
-#config_package_add kmod-ipt-nat
-#config_package_add kmod-nf-nat
-#opkg install iptables-legacy ip6tables-legacy
+config_package_add kmod-nft-compat
+config_package_add kmod-ip6tables
 config_package_add luci-app-parentcontrol
 #设置向导
 config_package_add luci-app-netwizard
