@@ -238,10 +238,10 @@ config_package_add luci-app-autotimeset
 config_package_add luci-lib-ipkg
 ## 分区扩容。一键自动格式化分区、扩容、自动挂载插件，专为OPENWRT设计，简化OPENWRT在分区挂载上烦锁的操作
 config_package_add luci-app-partexp
-#家长控制
-config_package_add kmod-nft-compat
-config_package_add kmod-ip6tables
-config_package_add luci-app-parentcontrol
+#家长控制 有问题，不能启动
+#config_package_add kmod-nft-compat
+#config_package_add kmod-ip6tables
+#config_package_add luci-app-parentcontrol
 #设置向导
 config_package_add luci-app-netwizard
 #网络速度测试
