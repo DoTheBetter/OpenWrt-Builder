@@ -203,6 +203,8 @@ sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.
 config_package_add luci-app-vlmcsd
 # socat端口映射
 config_package_add luci-app-socat
+# ipv6
+config_package_add ipv6helper
 
 #硬件及驱动
 # 虚拟机支持
