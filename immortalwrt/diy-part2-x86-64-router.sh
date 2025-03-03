@@ -248,8 +248,10 @@ config_package_add luci-app-netwizard
 config_package_add luci-app-netspeedtest
 
 #应用过滤
+config_package_add kmod-oaf
+config_package_add appfilter
 config_package_add luci-app-oaf
-
+config_package_add luci-i18n-oaf-zh-cn
 
 ## iStore 应用市场 只支持 x86_64 和 arm64 设备
 ##git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
