@@ -253,14 +253,12 @@ config_package_add luci-app-netspeedtest
 git clone https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter
 ./scripts/feeds update -a
 ./scripts/feeds install -a
-echo "CONFIG_PACKAGE_luci-app-oaf=y" >> .config
-make defconfig  # 生成完整配置
-
-
-#config_package_add kmod-oaf
-#config_package_add appfilter
-#config_package_add luci-app-oaf
-#config_package_add luci-i18n-oaf-zh-cn
+#echo "CONFIG_PACKAGE_luci-app-oaf=y" >> .config
+#make defconfig  # 生成完整配置
+config_package_add kmod-oaf
+config_package_add appfilter
+config_package_add luci-app-oaf
+config_package_add luci-i18n-oaf-zh-cn
 
 ## iStore 应用市场 只支持 x86_64 和 arm64 设备
 ##git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
