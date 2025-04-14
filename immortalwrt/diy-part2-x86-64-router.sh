@@ -195,16 +195,27 @@ config_package_add nano
 config_package_add curl
 # upnp
 config_package_add luci-app-upnp
+# ipv6
+config_package_add ipv6helper
 # tty 终端
 config_package_add luci-app-ttyd
 # tty 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
+
 # kms
 config_package_add luci-app-vlmcsd
 # socat端口映射
 config_package_add luci-app-socat
-# ipv6
-config_package_add ipv6helper
+# ddns-go
+config_package_add luci-app-ddns-go
+# openclash
+config_package_add luci-app-openclash
+# homeproxy
+config_package_add luci-app-homeproxy
+# smartdns
+config_package_add luci-app-smartdns
+# adguardhome
+config_package_add adguardhome
 
 #硬件及驱动
 # 虚拟机支持
