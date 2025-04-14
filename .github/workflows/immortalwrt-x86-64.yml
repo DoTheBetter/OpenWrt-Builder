@@ -3,7 +3,7 @@ name: immortalwrt24.10 x86-64 Builder
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: [on-update]
+    types: [immortalwrt-x86-64-update]
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
@@ -179,5 +179,6 @@ jobs:
         with:
           keep_latest: 3
           delete_tags: true
+          delete_tag_pattern: ^${{ env.REPO_NAME }}_${{ env.OpenWrt_VERSION }}_${{ env.OpenWrt_ARCH }}_.*$
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
