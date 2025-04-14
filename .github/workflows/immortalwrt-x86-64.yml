@@ -3,7 +3,7 @@ name: immortalwrt24.10 x86-64 Builder
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: [immortalwrt-x86-64-update]
+    types: [immortalwrt-update]
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt

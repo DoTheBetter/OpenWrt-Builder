@@ -38,7 +38,7 @@ jobs:
       if: steps.cacheHash.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v3
       with:
-        event-type: immortalwrt-x86-64-update
+        event-type: immortalwrt-update
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
