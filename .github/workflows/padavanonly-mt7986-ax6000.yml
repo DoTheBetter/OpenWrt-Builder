@@ -2,6 +2,11 @@ name: padavanonly mt7986-ax6000 Builder
 
 on:
   workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
 #  repository_dispatch:
 #    types: [on-update]
 
@@ -26,7 +31,7 @@ jobs:
         run: |
           echo "若分配的服务器性能不足，务必及时取消，重新运行！"
           echo -e "------------------------------- CPU信息 -------------------------------"
-          echo "CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
+          echo "CPU物理数量:$(cat /proc/cpuinfo| grep \"physical id\"| sort| uniq| wc -l)"
           echo -e "CPU核心及版本信息: $(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
           echo -e "------------------------------- 内存信息 -------------------------------"
           echo "已安装内存详细信息: "
@@ -81,20 +86,26 @@ jobs:
           cd openwrt
           ${GITHUB_WORKSPACE}/${DIY_P1_SH}
 
-      - name: 更新feeds
-        run: cd openwrt && ./scripts/feeds update -a
+      - name: 更新并安装feeds
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
-      - name: 安装feeds
-        run: cd openwrt && ./scripts/feeds install -a
-
-      - name: 生成默认配置
-        run: cd openwrt && cp -f defconfig/mt7986-ax6000.config .config
+      - name: 加载默认config
+        run: |
+          cd openwrt
+          cp -f defconfig/mt7986-ax6000.config .config
       
       - name: 加载自定义配置
         run: |
           chmod +x ${DIY_P2_SH}
           cd openwrt
           ${GITHUB_WORKSPACE}/${DIY_P2_SH}
+
+      - name: SSH 连接到 Actions（cd openwrt && make menuconfig 结束ctrl+d）
+        uses: P3TERX/ssh2actions@main
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
 
       - name: 下载软件包
         id: package
@@ -112,7 +123,7 @@ jobs:
           echo -e "$(($(nproc) + 1)) thread compile"
           make -j$(($(nproc) + 1)) V=s || make -j1 || make -j1 V=s
           echo "status=success" >> $GITHUB_OUTPUT
-          echo "COMPILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+          echo "COMPILE_DATE=$(date +\"%Y%m%d%H%M\")" >> $GITHUB_ENV
 
       - name: 检查磁盘使用情况
         if: (!cancelled())
@@ -148,44 +159,3 @@ jobs:
         with:
           name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: ${{ env.FIRMWARE }}
-        
-#      - name: 生成发布标签
-#        id: tag
-#        if: steps.compile.outputs.status == 'success' && !cancelled()
-#        run: |
-#          echo "release_tag=${{ env.REPO_NAME }}_${{ env.OpenWrt_VERSION }}_${{ env.OpenWrt_ARCH }}_${{ env.COMPILE_DATE }}" >> ${GITHUB_OUTPUT}
-#          touch release.txt
-#          echo "
-#          💻 架构: ${{ env.OpenWrt_ARCH }}
-#
-#          📂 源码: ${{ env.REPO_URL }}
-#
-#          🌳 分支: ${{ env.REPO_BRANCH }}
-#
-#          ⏱️ 编译时间: ${{ env.COMPILE_DATE }}
-#
-#          🌐 管理地址: 192.168.10.1 , 子网掩码: 255.255.255.0
-#
-#          👤 用户名: root
-#
-#          🔒 密码: password 
-#          
-#          " > release.txt
-#          echo "status=success" >> ${GITHUB_OUTPUT}
-#
-#      - name: 发布固件到 Releases
-#        uses: softprops/action-gh-release@v2
-#        if: steps.tag.outputs.status == 'success' && !cancelled()
-#        with:
-#          tag_name: ${{ steps.tag.outputs.release_tag }}
-#          body_path: release.txt
-#          files: ${{ env.FIRMWARE }}/*
-#
-#      - name: 删除 Releases 旧版本
-#        uses: dev-drprasad/delete-older-releases@master
-#        with:
-#          keep_latest: 3
-#          delete_tags: true
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
