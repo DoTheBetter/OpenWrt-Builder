@@ -80,7 +80,8 @@ jobs:
         working-directory: /workdir
         run: |
           df -hT $PWD
-          git clone -b ${REPO_BRANCH} --single-branch --depth 1 ${REPO_URL} openwrt
+          #git clone -b ${REPO_BRANCH} --single-branch --depth 1 ${REPO_URL} openwrt
+          git clone -b ${REPO_BRANCH} --single-branch --filter=blob:none ${REPO_URL} openwrt
           ln -sf /workdir/openwrt ${GITHUB_WORKSPACE}/openwrt
 
       - name: 加载自定义feeds
