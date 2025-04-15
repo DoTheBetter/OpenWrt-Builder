@@ -72,12 +72,6 @@ sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7
 sed -i 's/192.168.1.1/192.168.10.10/g' package/base-files/files/bin/config_generate
 # 添加编译时间到版本信息
 sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
-# 添加编译时间到 /etc/banner
-#echo "Build Time: $(date +%Y%m%d)" >> package/base-files/files/etc/banner
-
-# 删除
-# Sound Support
-#config_package_del kmod-sound-core
 
 # 新增
 # bbr
@@ -94,7 +88,7 @@ config_package_add nano
 # curl
 config_package_add curl
 # upnp
-#config_package_add luci-app-upnp
+config_package_add luci-app-upnp
 # ipv6
 config_package_add ipv6helper
 # tty 终端

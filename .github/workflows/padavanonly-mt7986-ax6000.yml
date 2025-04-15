@@ -4,9 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       ssh:
-        description: 'SSH connection to Actions'
+        description: 'SSH远程配置固件'
         required: false
         default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 #  repository_dispatch:
 #    types: [on-update]
 
