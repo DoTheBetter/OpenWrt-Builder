@@ -76,7 +76,7 @@ config_add TARGET_mediatek_mt7986_DEVICE_xiaomi_redmi-router-ax6000
 # 设置'root'密码为 'password'
 sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
 # 修改默认IP
-sed -i 's/192.168.1.1/192.168.10.10/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.6.1/192.168.31.1/g' package/base-files/files/bin/config_generate
 # 添加编译时间到版本信息
 sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
 
@@ -110,13 +110,12 @@ config_package_add luci-app-lucky
 git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/nikki
 config_package_add luci-app-nikki
 
-git_sparse_clone main https://github.com/kenzok8/small-package luci-app-adguardhome package/luci-app-adguardhome
+git clone https://github.com/EasyTier/luci-app-easytier.git package/easytier
+config_package_add luci-app-easytier
+
+git_sparse_clone main https://github.com/kenzok8/small-package.git luci-app-adguardhome
 config_package_add luci-app-adguardhome
 
-git_sparse_clone main https://github.com/kenzok8/small-package luci-app-mosdns package/luci-app-mosdns
-config_package_add luci-app-mosdns
-
-mkdir -p package/custom
 git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
 clean_packages package/custom
 # golang
