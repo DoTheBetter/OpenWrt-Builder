@@ -152,11 +152,6 @@ jobs:
           rm -rf packages
           rm -rf *.buildinfo
           rm -rf profiles.json
-          rm -rf immortalwrt-${{ env.OpenWrt_ARCH }}-generic-kernel.bin
-          rm -rf immortalwrt-${{ env.OpenWrt_ARCH }}-generic.manifest
-          rm -rf immortalwrt-${{ env.OpenWrt_ARCH }}-generic-squashfs-rootfs.img.gz
-          mv immortalwrt-${{ env.OpenWrt_ARCH }}-generic-rootfs.tar.gz immortalwrt-${{ env.OpenWrt_VERSION }}-${{ env.OpenWrt_ARCH }}-generic-rootfs-${{ env.COMPILE_DATE }}.tar.gz
-          mv immortalwrt-${{ env.OpenWrt_ARCH }}-generic-squashfs-combined-efi.img.gz immortalwrt-${{ env.OpenWrt_VERSION }}-${{ env.OpenWrt_ARCH }}-generic-squashfs-combined-efi-${{ env.COMPILE_DATE }}.img.gz
           echo -e "------------------------------- 文件列表 -------------------------------"
           ls
 
