@@ -113,9 +113,10 @@ config_package_add luci-app-nikki
 git clone https://github.com/EasyTier/luci-app-easytier.git package/easytier
 config_package_add luci-app-easytier
 
-git_sparse_clone main https://github.com/kenzok8/small-package.git luci-app-adguardhome
+git_sparse_clone main https://github.com/kenzok8/small-package luci-app-adguardhome
 config_package_add luci-app-adguardhome
 
+mkdir -p package/custom
 git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
 clean_packages package/custom
 # golang
