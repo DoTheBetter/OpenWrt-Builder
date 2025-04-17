@@ -98,15 +98,10 @@ config_package_add curl
 config_package_add luci-app-ttyd
 # tty 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
-
 # kms
 config_package_add luci-app-vlmcsd
-# homeproxy
-config_package_add luci-app-homeproxy
 # smartdns
 config_package_add luci-app-smartdns
-# adguardhome
-config_package_add adguardhome
 
 #### 第三方软件包
 git clone https://github.com/gdy666/luci-app-lucky.git package/lucky
@@ -115,6 +110,11 @@ config_package_add luci-app-lucky
 git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/nikki
 config_package_add luci-app-nikki
 
+git_sparse_clone main https://github.com/kenzok8/small-package luci-app-adguardhome package/luci-app-adguardhome
+config_package_add luci-app-adguardhome
+
+git_sparse_clone main https://github.com/kenzok8/small-package luci-app-mosdns package/luci-app-mosdns
+config_package_add luci-app-mosdns
 
 mkdir -p package/custom
 git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom

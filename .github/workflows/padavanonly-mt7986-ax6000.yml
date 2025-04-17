@@ -151,6 +151,8 @@ jobs:
           cd ${{ env.FIRMWARE }}
           rm -rf packages
           rm -rf *.buildinfo
+          rm -rf *.manifest
+          rm -rf *initramfs-kernel.bin
           rm -rf profiles.json
           echo -e "------------------------------- 文件列表 -------------------------------"
           ls
