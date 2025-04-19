@@ -1,0 +1,165 @@
+name: padavanonly mt7986-ax6000 Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH远程配置固件'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+  repository_dispatch:
+    types: [mt798x-update]
+
+env:
+  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-24.10
+  REPO_NAME: immortalwrt
+  REPO_BRANCH: 2410
+  OpenWrt_VERSION: 24.10
+  OpenWrt_ARCH: mt7986
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: .config
+  DIY_P1_SH: padavanonly/diy-part1-mt7986-ax6000.sh
+  DIY_P2_SH: padavanonly/diy-part2-mt7986-ax6000.sh
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: 检查服务器配置
+        run: |
+          echo "警告⚠"
+          echo "若分配的服务器性能不足，务必及时取消，重新运行！"
+          echo "已知编译成功CPU型号：8370C,8171M"
+          echo "已知性能不足CPU型号：8272CL,E5系列"
+          echo "--------------------------CPU信息--------------------------"
+          echo "CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
+          echo -e "CPU核心及版本信息：$(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+          echo "--------------------------内存信息--------------------------"
+          echo "已安装内存详细信息："
+          sudo lshw -short -C memory | grep GiB
+          echo -e "\n"
+          echo "--------------------------硬盘信息--------------------------"
+          echo -e  "硬盘数量：$(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
+          echo "硬盘详情："
+          df -Th
+
+      - name: 清理磁盘空间 (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: 检查磁盘检使用情况
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 准备完成
+        uses: actions/checkout@main
+
+      - name: 初始化编译环境
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt-get -qq update
+          sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+          sudo -E apt-get -qq autoremove --purge
+          sudo -E apt-get -qq clean
+          sudo timedatectl set-timezone "${TZ}"
+          sudo mkdir -p /workdir
+          sudo chown $USER:$GROUPS /workdir
+
+      - name: 下载固件源码
+        working-directory: /workdir
+        run: |
+          df -hT $PWD
+          git clone -b ${REPO_BRANCH} --single-branch --depth 1 ${REPO_URL} openwrt
+          ln -sf /workdir/openwrt ${GITHUB_WORKSPACE}/openwrt
+
+      - name: 加载自定义feeds
+        run: |
+          [ -e ${FEEDS_CONF} ] && mv ${FEEDS_CONF} openwrt/feeds.conf.default
+          chmod +x ${DIY_P1_SH}
+          cd openwrt
+          ${GITHUB_WORKSPACE}/${DIY_P1_SH}
+
+      - name: 更新并安装feeds
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: 加载默认config
+        run: |
+          cd openwrt
+          cp -f defconfig/mt7986-ax6000.config .config
+      
+      - name: 加载自定义配置
+        run: |
+          chmod +x ${DIY_P2_SH}
+          cd openwrt
+          ${GITHUB_WORKSPACE}/${DIY_P2_SH}
+
+      - name: SSH 连接到 Actions（cd openwrt && make menuconfig 结束ctrl+d）
+        uses: P3TERX/ssh2actions@main
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+
+      - name: 下载软件包
+        id: package
+        run: |
+          cd openwrt
+          make defconfig
+          make download -j8
+          find dl -size -1024c -exec ls -l {} \;
+          find dl -size -1024c -exec rm -f {} \;
+
+      - name: 编译固件
+        id: compile
+        run: |
+          cd openwrt
+          echo -e "$(($(nproc) + 1)) thread compile"
+          make -j$(($(nproc) + 1)) V=s || make -j1 || make -j1 V=s
+          echo "status=success" >> $GITHUB_OUTPUT
+          echo "COMPILE_DATE=$(date +\"%Y%m%d%H%M\")" >> $GITHUB_ENV
+
+      - name: 检查磁盘使用情况
+        if: (!cancelled())
+        run: df -hT
+
+      - name: 列出固件文件
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cd openwrt/bin/targets/*/*
+          echo -e "------------------------------- 文件列表 -------------------------------"
+          ls
+          echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+
+      - name: 整理固件
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        run: |
+          cp -rf openwrt/.config ${{ env.FIRMWARE }}/config
+          cd ${{ env.FIRMWARE }}
+          rm -rf packages
+          rm -rf profiles.json
+          rm -rf *.buildinfo
+          rm -rf *.manifest
+          rm -rf *initramfs-kernel.bin
+          echo -e "------------------------------- 文件列表 -------------------------------"
+          ls
+
+      - name: 上传firmware目录
+        uses: actions/upload-artifact@main
+        if: steps.compile.outputs.status == 'success' && !cancelled()
+        with:
+          name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+          path: ${{ env.FIRMWARE }}

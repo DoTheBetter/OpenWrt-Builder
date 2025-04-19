@@ -1,0 +1,128 @@
+name: Openwrt-default-config
+
+on:
+  workflow_dispatch:   # 允许手动触发
+    inputs:
+      repo_name:
+        description: '源码仓库名称'
+        required: true
+        default: 'immortalwrt'
+        type: string
+      repo_url:
+        description: '源码仓库地址'
+        required: true
+        default: 'https://github.com/immortalwrt/immortalwrt'
+        type: string
+      repo_branch:
+        description: '源码仓库分支'
+        required: true
+        default: 'openwrt-24.10'
+        type: string
+      ssh:
+        description: 'SSH远程配置固件'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+
+    - name: 显示输入信息
+      run: |
+        echo -e "------------------------------- 输入信息 -------------------------------"
+        echo -e "源码仓库名称: ${{ inputs.repo_name }}"
+        echo -e "源码仓库地址: ${{ inputs.repo_url }}"
+        echo -e "源码仓库分支: ${{ inputs.repo_branch }}"
+        echo -e "SSH远程配置固件: ${{ inputs.ssh }}"
+
+    - name: 检查服务器配置
+      run: |
+        echo "若分配的服务器性能不足，务必及时取消，重新运行！"
+        echo -e "------------------------------- CPU信息 -------------------------------"
+        echo "CPU物理数量:$(cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l)"
+        echo -e "CPU核心及版本信息: $(cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c) \n"
+        echo -e "------------------------------- 内存信息 -------------------------------"
+        echo "已安装内存详细信息: "
+        sudo lshw -short -C memory | grep GiB
+        echo -e "\n"
+        echo -e "------------------------------- 磁盘信息 -------------------------------"
+        echo -e "磁盘数量: $(ls /dev/sd* | grep -v [1-9] | wc -l) \n"
+        echo -e "------------------------------- 磁盘详情 -------------------------------"
+        df -Th
+
+    - name: 清理磁盘空间 (Ubuntu)
+      uses: jlumbroso/free-disk-space@main
+      with:
+        tool-cache: false
+        android: true
+        dotnet: true
+        haskell: true
+        large-packages: true
+        docker-images: true
+        swap-storage: true
+
+    - name: 检查磁盘检使用情况
+      if: (!cancelled())
+      run: df -hT
+
+    - name: 准备完成
+      uses: actions/checkout@main
+
+    - name: 初始化编译环境
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo -E apt-get -qq update
+        sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
+        sudo -E apt-get -qq autoremove --purge
+        sudo -E apt-get -qq clean
+        sudo timedatectl set-timezone "${TZ}"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
+    - name: 下载固件源码
+      working-directory: /workdir
+      run: |
+        df -hT $PWD
+        git clone -b ${{ inputs.repo_branch }} --single-branch --depth 1 ${{ inputs.repo_url }} openwrt
+        ln -sf /workdir/openwrt ${GITHUB_WORKSPACE}/openwrt
+
+    - name: 更新 feeds
+      run: cd openwrt && ./scripts/feeds update -a
+
+    - name: 安装 feeds
+      run: cd openwrt && ./scripts/feeds install -a
+
+    - name: SSH 连接到 Actions（cd openwrt && make menuconfig 结束ctrl+d）
+      uses: mxschmitt/action-tmate@v3
+      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+
+    - name: 生成config配置文件
+      run: |
+        cd openwrt
+        make defconfig
+        cp .config template.config
+        echo "FILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+
+    - name: 缓存构建以加速 openwrt 编译
+      uses: stupidloud/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        mixkey: ${{ inputs.repo_name }}_${{ inputs.repo_branch }}
+        prefix: ${{ github.workspace }}/openwrt
+
+    - name: 上传配置文件到 Github Artifacts
+      uses: actions/upload-artifact@main
+      with:
+        name: template.config_${{ inputs.repo_name }}_${{ inputs.repo_branch }}_${{ env.FILE_DATE }}
+        path: openwrt/template.config
+
