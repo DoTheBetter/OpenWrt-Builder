@@ -69,8 +69,9 @@ function git_sparse_clone() {
 }
 
 ##########################
-#设置官方默认包https://downloads.immortalwrt.org/releases/24.10.0/targets/x86/64/profiles.json
+#设置官方默认包https://downloads.immortalwrt.org/releases/25.12.0/targets/x86/64/profiles.json
 default_packages=(
+    "apk-openssl",
     "autocore",
     "automount",
     "base-files",
@@ -96,7 +97,6 @@ default_packages=(
     "kmod-ixgbe",
     "kmod-ixgbevf",
     "kmod-nf-nathelper",
-    "kmod-nf-nathelper-extra",
     "kmod-nft-offload",
     "kmod-pcnet32",
     "kmod-r8101",
@@ -115,18 +115,13 @@ default_packages=(
     "libgcc",
     "libustream-openssl",
     "logd",
-    "luci-app-package-manager",
-    "luci-compat",
-    "luci-lib-base",
-    "luci-lib-ipkg",
-    "luci-light",
+    "luci",
     "mkf2fs",
     "mtd",
     "netifd",
     "nftables",
     "odhcp6c",
     "odhcpd-ipv6only",
-    "opkg",
     "partx-utils",
     "ppp",
     "ppp-mod-pppoe",
@@ -149,7 +144,7 @@ sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_genera
 # 添加编译时间到版本信息
 sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
 # 添加编译时间到 /etc/banner
-#sed -i '$ i\\ Build Time: '"$(date +%Y%m%d)"'' package/base-files/files/etc/banner
+sed -i '$ i\\ Build Time: '"$(date +%Y%m%d)"'' package/base-files/files/etc/banner
 
 #### 镜像生成
 # 修改分区大小
@@ -219,14 +214,14 @@ config_package_add luci-app-ttyd
 # tty 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
-# 宽带聚合
-config_package_add luci-app-mwan3
 # kms
-config_package_add luci-app-vlmcsd
+#config_package_add luci-app-vlmcsd
 # smartdns
-config_package_add luci-app-smartdns
+#config_package_add luci-app-smartdns
 # 应用过滤
 #config_package_add luci-app-appfilter
+# 内网穿透
+config_package_add luci-app-zerotier
 
 #硬件及驱动
 # 虚拟机支持
@@ -244,61 +239,33 @@ config_package_add kmod-usb-net-rndis
 config_package_add kmod-usb-net-ipheth
 
 #### 第三方软件包
-# 一个适用于官方openwrt(22.03/23.05/24.10) firewall4的turboacc
-#curl -sSL https://raw.githubusercontent.com/chenmozhijin/turboacc/luci/add_turboacc.sh -o add_turboacc.sh && bash add_turboacc.sh --no-sfe
-#config_package_add luci-app-turboacc
-
-# Transparent Proxy with Mihomo on OpenWrt
-git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/nikki
-config_package_add luci-app-nikki
-
-# 一个简单、安全、去中心化的内网穿透 VPN 组网方案EasyTier
-git clone https://github.com/EasyTier/luci-app-easytier.git package/easytier
-config_package_add luci-app-easytier
-
-# 软硬路由公网神器,ipv6/ipv4 端口转发,反向代理,DDNS,WOL,ipv4 stun内网穿透,cron,acme,阿里云盘,ftp,webdav,filebrowser
-git clone https://github.com/gdy666/luci-app-lucky.git package/lucky
-config_package_add luci-app-lucky
-
-# adguardhome 文件管理fileassistant
-git_sparse_clone main https://github.com/kenzok8/small-package luci-app-adguardhome luci-app-fileassistant
-config_package_add luci-app-adguardhome
-config_package_add luci-app-fileassistant
-
-# mosdns
-find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-find ./ | grep Makefile | grep mosdns | xargs rm -f
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-config_package_add luci-app-mosdns
-
-# 上网时间控制NFT版
-git clone https://github.com/sirpdboy/luci-app-timecontrol package/luci-app-timecontrol
-config_package_add luci-app-nft-timecontrol
-
 mkdir -p package/custom
-git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
+git clone -b OpenWrt-25.x --single-branch --depth 1 https://github.com/DoTheBetter/OpenWrt_Packages.git package/custom
 clean_packages package/custom
-
 # golang
 rm -rf feeds/packages/lang/golang
 mv package/custom/golang feeds/packages/lang/
-
 # argon 主题
-config_package_add luci-theme-argon
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-
-# 定时任务。重启、关机、重启网络、释放内存、系统清理、网络共享、关闭网络、自动检测断网重连、MWAN3负载均衡检测重连、自定义脚本等10多个功能
+config_package_add luci-theme-argon
+config_package_add luci-app-argon-config
+# Mihomo on OpenWrt
+#config_package_add luci-app-nikki
+# 内网穿透
+config_package_add luci-app-easytier
+# 软硬路由公网神器
+config_package_add luci-app-lucky
+# adguardhome
+#config_package_add luci-app-adguardhome
+# mosdns
+config_package_add luci-app-mosdns
+# 上网时间控制NFT版
+config_package_add luci-app-nft-timecontrol
+# 定时任务
 config_package_add luci-app-taskplan
-config_package_add luci-lib-ipkg
-## 分区扩容。一键自动格式化分区、扩容、自动挂载插件，专为OPENWRT设计，简化OPENWRT在分区挂载上烦锁的操作
-config_package_add luci-app-partexp
-#设置向导
-#config_package_add luci-app-netwizard
-#网络速度测试
-#config_package_add luci-app-netspeedtest
-
-## iStore 应用市场 只支持 x86_64 和 arm64 设备
-##git_sparse_clone main https://github.com/Lienol/openwrt-package luci-app-filebrowser luci-app-ssr-mudb-server
-#git_sparse_clone main https://github.com/linkease/istore luci
-#config_package_add luci-app-store
+# 分区管理
+#config_package_add luci-app-partexp
+# 文件管理
+config_package_add luci-app-fileassistant
+# 设置向导
+config_package_add luci-app-netwizard

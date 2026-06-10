@@ -1,5 +1,5 @@
 # OpenWrt-Builder
-基于ImmortalWrt定制编译的主路由、旁路网关，跟随 24.10 分支更新自动编译。
+基于ImmortalWrt定制编译的主路由、旁路网关，跟随稳定分支更新自动编译。
 
 本仓库地址：[https://github.com/DoTheBetter/OpenWrt-Builder](https://github.com/DoTheBetter/OpenWrt-Builder)
 
@@ -13,7 +13,7 @@
 
 | 编译架构 | X86-64 | mt7986（红米redmi-ax6000） |
 |---------|:-------|:-----------------|
-| 编译信息 | 基于官方ImmortalWrt | 使用 [padavanonly/immortalwrt-mt798x-24.10](https://github.com/padavanonly/immortalwrt-mt798x-24.10) 仓库，搭配 [H大的不死u-boot](https://github.com/hanwckf/bl-mt798x) (immortalwrt-110m分区) |
+| 编译信息 | 基于官方ImmortalWrt稳定分支 | 使用 [padavanonly/immortalwrt-mt798x-24.10](https://github.com/padavanonly/immortalwrt-mt798x-24.10) 仓库，搭配 [H大的不死u-boot](https://github.com/hanwckf/bl-mt798x) (immortalwrt-110m分区) |
 | 精简内容 | 精简全部音频组件 | - |
 | 软件配置 | • 升级golang版本<br>• 添加bash、nano、curl | • 升级golang版本<br>• 添加bash、nano、curl |
 | 服务配置 | • upnp服务<br>• ttyd服务<br>• kms服务<br>• nikki服务<br>• easytier内网穿透<br>• lucky端口转发及反向代理<br>• DNS工具(adguardhome/smartdns/mosdns)<br>• nft-timecontrol上网时间控制<br>• taskplan多功能定时任务<br>• partexp分区扩容工具<br>• fileassistant文件管理 | • upnp服务<br>• ttyd服务<br>• kms服务<br>• nikki服务<br>• easytier内网穿透<br>• lucky端口转发及反向代理<br>• DNS工具(adguardhome/smartdns/mosdns)<br>• nft-timecontrol上网时间控制<br>• taskplan多功能定时任务<br>• fileassistant文件管理<br>• eqos-mtk网速控制（仓库默认）<br>• turboacc-mtk网络加速（仓库默认） |
