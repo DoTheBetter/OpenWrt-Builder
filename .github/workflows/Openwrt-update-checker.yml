@@ -12,11 +12,11 @@ jobs:
       matrix:
         include:
           - repo: immortalwrt/immortalwrt
-            branch: openwrt-24.10
+            branch: openwrt-25.12
             hash_key: immortalwrt_commitHash
             event: immortalwrt-update
-          - repo: padavanonly/immortalwrt-mt798x-24.10
-            branch: "2410"
+          - repo: padavanonly/immortalwrt-mt798x-6.6
+            branch: "openwrt-24.10-6.6"
             hash_key: mt798x_commitHash
             event: mt798x-update
 

@@ -183,6 +183,8 @@ config_package_del kmod-fb-sys-ram
 # Other
 config_package_del luci-app-rclone_INCLUDE_rclone-webui
 config_package_del luci-app-rclone_INCLUDE_rclone-ng
+# 禁用有依赖问题的包
+config_package_del onionshare-cli
 
 #### 新增
 # Firmware
@@ -215,7 +217,7 @@ config_package_add luci-app-ttyd
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
 # kms
-#config_package_add luci-app-vlmcsd
+config_package_add luci-app-vlmcsd
 # smartdns
 #config_package_add luci-app-smartdns
 # 应用过滤

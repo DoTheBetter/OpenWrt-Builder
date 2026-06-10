@@ -115,43 +115,36 @@ sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.
 # kms
 config_package_add luci-app-vlmcsd
 # smartdns
-config_package_add luci-app-smartdns
+#config_package_add luci-app-smartdns
 
 #### 第三方软件包
-git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/nikki
-config_package_add luci-app-nikki
-
-git clone https://github.com/EasyTier/luci-app-easytier.git package/easytier
-config_package_add luci-app-easytier
-
-git clone https://github.com/gdy666/luci-app-lucky.git package/lucky
-config_package_add luci-app-lucky
-
-# adguardhome 文件管理fileassistant
-git_sparse_clone main https://github.com/kenzok8/small-package luci-app-adguardhome luci-app-fileassistant
-config_package_add luci-app-adguardhome
-config_package_add luci-app-fileassistant
-
-find ./ | grep Makefile | grep v2ray-geodata | xargs rm -f
-find ./ | grep Makefile | grep mosdns | xargs rm -f
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-config_package_add luci-app-mosdns
-
-git clone https://github.com/sirpdboy/luci-app-timecontrol package/luci-app-timecontrol
-config_package_add luci-app-nft-timecontrol
-
 mkdir -p package/custom
-git clone --depth 1 https://github.com/DoTheBetter/OpenWrt-Packages.git package/custom
+git clone -b OpenWrt-24.x --single-branch --depth 1 https://github.com/DoTheBetter/OpenWrt_Packages.git package/custom
 clean_packages package/custom
 # golang
 rm -rf feeds/packages/lang/golang
 mv package/custom/golang feeds/packages/lang/
 # argon 主题
-config_package_add luci-theme-argon
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
-## 定时任务。重启、关机、重启网络、释放内存、系统清理、网络共享、关闭网络、自动检测断网重连、MWAN3负载均衡检测重连、自定义脚本等10多个功能
+config_package_add luci-theme-argon
+config_package_add luci-app-argon-config
+# Mihomo on OpenWrt
+#config_package_add luci-app-nikki
+# 内网穿透
+config_package_add luci-app-easytier
+# 软硬路由公网神器
+config_package_add luci-app-lucky
+# adguardhome
+#config_package_add luci-app-adguardhome
+# mosdns
+config_package_add luci-app-mosdns
+# 上网时间控制NFT版
+config_package_add luci-app-nft-timecontrol
+# 定时任务
 config_package_add luci-app-taskplan
-config_package_add luci-lib-ipkg
-#网络速度测试
-#config_package_add luci-app-netspeedtest
+# 分区管理
+#config_package_add luci-app-partexp
+# 文件管理
+config_package_add luci-app-fileassistant
+# 设置向导
+config_package_add luci-app-netwizard

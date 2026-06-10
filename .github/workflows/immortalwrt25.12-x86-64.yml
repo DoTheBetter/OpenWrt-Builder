@@ -1,4 +1,4 @@
-name: immortalwrt24.10 x86-64 Builder
+name: immortalwrt25.12 x86-64 Builder
 
 on:
   workflow_dispatch:
@@ -93,7 +93,19 @@ jobs:
       - name: 加载config或生成默认配置
         run: |
           cd openwrt
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config || make defconfig
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
+
+          # 确保配置文件中设置了正确的 x86-64 架构
+          if ! grep -q "CONFIG_TARGET_x86=y" .config; then
+            echo "CONFIG_TARGET_x86=y" >> .config
+          fi
+          if ! grep -q "CONFIG_TARGET_x86_64=y" .config; then
+            echo "CONFIG_TARGET_x86_64=y" >> .config
+          fi
+          echo "已设置目标架构为 x86-64"
+
+          make defconfig
+          grep "CONFIG_TARGET" .config || echo "未找到 CONFIG_TARGET 配置"
       
       - name: 加载自定义配置
         run: |

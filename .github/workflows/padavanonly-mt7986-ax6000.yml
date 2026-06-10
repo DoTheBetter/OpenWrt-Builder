@@ -6,9 +6,9 @@ on:
     types: [mt798x-update]
 
 env:
-  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-24.10
+  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
   REPO_NAME: immortalwrt
-  REPO_BRANCH: 2410
+  REPO_BRANCH: openwrt-24.10-6.6
   OpenWrt_VERSION: 24.10
   OpenWrt_ARCH: mt7986
   FEEDS_CONF: feeds.conf.default
