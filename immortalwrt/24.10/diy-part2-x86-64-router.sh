@@ -69,9 +69,8 @@ function git_sparse_clone() {
 }
 
 ##########################
-#设置官方默认包https://downloads.immortalwrt.org/releases/25.12.0/targets/x86/64/profiles.json
+#设置官方默认包https://downloads.immortalwrt.org/releases/24.10.6/targets/x86/64/profiles.json
 default_packages=(
-    "apk-openssl",
     "autocore",
     "automount",
     "base-files",
@@ -97,6 +96,7 @@ default_packages=(
     "kmod-ixgbe",
     "kmod-ixgbevf",
     "kmod-nf-nathelper",
+    "kmod-nf-nathelper-extra",
     "kmod-nft-offload",
     "kmod-pcnet32",
     "kmod-r8101",
@@ -115,13 +115,18 @@ default_packages=(
     "libgcc",
     "libustream-openssl",
     "logd",
-    "luci",
+    "luci-app-package-manager",
+    "luci-compat",
+    "luci-lib-base",
+    "luci-lib-ipkg",
+    "luci-light",
     "mkf2fs",
     "mtd",
     "netifd",
     "nftables",
     "odhcp6c",
     "odhcpd-ipv6only",
+    "opkg",
     "partx-utils",
     "ppp",
     "ppp-mod-pppoe",
@@ -184,9 +189,9 @@ config_package_del kmod-fb-sys-ram
 config_package_del luci-app-rclone_INCLUDE_rclone-webui
 config_package_del luci-app-rclone_INCLUDE_rclone-ng
 
-
 #### 新增
-
+# Firmware
+config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # luci
@@ -214,6 +219,8 @@ config_package_add luci-app-ttyd
 # tty 免登录
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
+# 宽带聚合
+config_package_add luci-app-mwan3
 # kms
 config_package_add luci-app-vlmcsd
 # smartdns
@@ -240,7 +247,7 @@ config_package_add kmod-usb-net-ipheth
 
 #### 第三方软件包
 mkdir -p package/custom
-git clone -b OpenWrt-25.x --single-branch --depth 1 https://github.com/DoTheBetter/OpenWrt_Packages.git package/custom
+git clone -b OpenWrt-24.x --single-branch --depth 1 https://github.com/DoTheBetter/OpenWrt_Packages.git package/custom
 clean_packages package/custom
 # golang
 rm -rf feeds/packages/lang/golang
