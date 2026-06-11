@@ -183,12 +183,10 @@ config_package_del kmod-fb-sys-ram
 # Other
 config_package_del luci-app-rclone_INCLUDE_rclone-webui
 config_package_del luci-app-rclone_INCLUDE_rclone-ng
-# 禁用有依赖问题的包
-config_package_del onionshare-cli
+
 
 #### 新增
-# Firmware
-config_package_add intel-microcode
+
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # luci

@@ -93,7 +93,16 @@ jobs:
       - name: 加载config或生成默认配置
         run: |
           cd openwrt
-          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE .config
+
+          # 检查是否存在自定义配置文件
+          if [ -e "$CONFIG_FILE" ]; then
+            echo "发现自定义配置文件: $CONFIG_FILE"
+            mv "$CONFIG_FILE" .config
+          else
+            echo "未找到自定义配置文件，将生成默认配置"
+            # 创建空的 .config 文件
+            touch .config
+          fi
 
           # 确保配置文件中设置了正确的 x86-64 架构
           if ! grep -q "CONFIG_TARGET_x86=y" .config; then
@@ -105,6 +114,8 @@ jobs:
           echo "已设置目标架构为 x86-64"
 
           make defconfig
+
+          echo "------------------------------- 目标架构配置 -------------------------------"
           grep "CONFIG_TARGET" .config || echo "未找到 CONFIG_TARGET 配置"
       
       - name: 加载自定义配置

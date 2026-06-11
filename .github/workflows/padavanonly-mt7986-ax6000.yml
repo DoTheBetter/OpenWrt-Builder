@@ -141,6 +141,7 @@ jobs:
           rm -rf *.buildinfo
           rm -rf *.manifest
           rm -rf *kernel.bin
+          rm -rf mt79*-ram*
           echo -e "------------------------------- 文件列表 -------------------------------"
           ls
 
