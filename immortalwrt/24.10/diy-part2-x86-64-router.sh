@@ -194,6 +194,10 @@ config_package_del luci-app-rclone_INCLUDE_rclone-ng
 config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
+# 设置 FULLCONENAT（全锥形 NAT）
+config_package_add kmod-ipt-fullconenat
+config_package_add iptables-mod-fullconenat
+config_package_add ip6tables-mod-fullconenat
 # luci
 config_package_add luci
 config_package_add default-settings-chn
