@@ -147,7 +147,11 @@ sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
 # 添加编译时间到版本信息
-sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
+BUILD_DATE=$(TZ=UTC-8 date +"%Y%m%d")
+NEW_DESC="${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on ${BUILD_DATE}"
+#sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
+sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='${NEW_DESC}'/" package/base-files/files/etc/openwrt_release
+sed -i "/option description/s/.*/\toption description '${NEW_DESC}'/" package/base-files/files/etc/config/system
 # 添加编译时间到 /etc/banner
 sed -i '$ i\\ Build Time: '"$(date +%Y%m%d)"'' package/base-files/files/etc/banner
 
