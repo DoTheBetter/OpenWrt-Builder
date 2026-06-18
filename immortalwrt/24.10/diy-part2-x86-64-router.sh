@@ -228,7 +228,7 @@ config_package_add luci-app-ttyd
 sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.config
 
 # 宽带聚合
-config_package_add luci-app-mwan3
+#config_package_add luci-app-mwan3
 # kms
 config_package_add luci-app-vlmcsd
 # smartdns
@@ -283,4 +283,4 @@ config_package_add luci-app-taskplan
 # 文件管理
 config_package_add luci-app-fileassistant
 # 设置向导
-config_package_add luci-app-netwizard
+#config_package_add luci-app-netwizard
