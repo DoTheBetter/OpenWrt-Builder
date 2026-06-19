@@ -3,7 +3,7 @@ name: immortalwrt25.12 x86-64 Builder
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: [immortalwrt-update]
+    types: [immortalwrt_25.12-update]
 
 env:
   REPO_URL: https://github.com/immortalwrt/immortalwrt
@@ -13,8 +13,8 @@ env:
   OpenWrt_ARCH: x86-64
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
-  DIY_P1_SH: immortalwrt/diy-part1-x86-64.sh
-  DIY_P2_SH: immortalwrt/diy-part2-x86-64-router.sh
+  DIY_P1_SH: immortalwrt/25.12/diy-part1-x86-64.sh
+  DIY_P2_SH: immortalwrt/25.12/diy-part2-x86-64-router.sh
   TZ: Asia/Shanghai
 
 jobs:
