@@ -186,22 +186,14 @@ config_package_del luci-app-rclone_INCLUDE_rclone-ng
 # Firmware
 # 清理 intel-microcode 编译缓存，避免 "File exists" 错误
 echo "清理 intel-microcode 编译缓存..."
-if make package/firmware/intel-microcode/clean; then
-    echo "✓ intel-microcode 清理命令执行成功"
-    # 检查是否还有残留文件
-    if ls build_dir/target-x86_64_musl/intel-microcode-* 2>/dev/null; then
-        echo "⚠ 警告: 发现残留编译目录，执行强制清理..."
-        rm -rf build_dir/target-x86_64_musl/intel-microcode-*
-        echo "✓ 强制清理完成"
-    else
-        echo "✓ 未发现残留文件，清理完成"
-    fi
-else
-    echo "⚠ intel-microcode 清理命令执行失败或包不存在，尝试手动清理..."
-    rm -rf build_dir/target-x86_64_musl/intel-microcode-*
-    rm -rf staging_dir/target-x86_64_musl/root-x86/intel-ucode*
-    echo "✓ 手动清理完成"
-fi
+# 彻底清理所有相关目录和文件
+rm -rf build_dir/target-x86_64_musl/intel-microcode-*
+rm -rf staging_dir/target-x86_64_musl/root-x86/intel-ucode*
+rm -rf tmp/.intel-microcode-*
+# 特别清理 intel-ucode-ipkg 目录（这是导致 "File exists" 错误的根源）
+find build_dir/target-x86_64_musl -type d -name "intel-ucode-ipkg" -exec rm -rf {} + 2>/dev/null || true
+echo "✓ intel-microcode 清理完成"
+
 config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
@@ -227,6 +219,8 @@ sed -i 's|/bin/ash|/bin/bash|g' package/base-files/files/etc/passwd
 config_package_add nano
 # curl
 config_package_add curl
+# 解压工具 unzip
+config_package_add unzip
 # upnp
 config_package_add luci-app-upnp
 # tty 终端

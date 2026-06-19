@@ -220,6 +220,8 @@ sed -i 's|/bin/ash|/bin/bash|g' package/base-files/files/etc/passwd
 config_package_add nano
 # curl
 config_package_add curl
+# 解压工具 unzip
+config_package_add unzip
 # upnp
 config_package_add luci-app-upnp
 # tty 终端
