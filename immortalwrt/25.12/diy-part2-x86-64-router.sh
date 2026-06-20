@@ -42,20 +42,18 @@ function config_package_add(){
     config_add $package
 }
 
-function drop_package(){
-    if [ "$1" != "golang" ];then
-        # feeds/base -> package
-        find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
-        find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
-    fi
-}
 function clean_packages(){
-    path=$1
-    dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
-    for item in ${dir}
-        do
-            drop_package ${item}
-        done
+    # $1: 源目录路径(如 package/mosdns)，遍历子目录作为包名，排除源目录子内容避免误删
+    local src_path="$1"
+    local src_dir_name=$(basename "$src_path")
+    local dir=$(ls -l ${src_path} | awk '/^d/ {print $NF}')
+    for name in ${dir}; do
+        if [ "$name" != "golang" ];then
+            # 排除源目录子内容，避免误删
+            find package/ -follow -name $name -not -path "${src_path}/*" | xargs -rt rm -rf
+            find feeds/ -follow -name $name -not -path "feeds/base/${src_dir_name}/*" | xargs -rt rm -rf
+        fi
+    done
 }
 
 # Git稀疏克隆，只克隆指定目录到本地
