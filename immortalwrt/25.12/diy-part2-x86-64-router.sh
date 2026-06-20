@@ -184,17 +184,7 @@ config_package_del luci-app-rclone_INCLUDE_rclone-ng
 
 #### 新增
 # Firmware
-# 清理 intel-microcode 编译缓存，避免 "File exists" 错误
-echo "清理 intel-microcode 编译缓存..."
-# 彻底清理所有相关目录和文件
-rm -rf build_dir/target-x86_64_musl/intel-microcode-*
-rm -rf staging_dir/target-x86_64_musl/root-x86/intel-ucode*
-rm -rf tmp/.intel-microcode-*
-# 特别清理 intel-ucode-ipkg 目录（这是导致 "File exists" 错误的根源）
-find build_dir/target-x86_64_musl -type d -name "intel-ucode-ipkg" -exec rm -rf {} + 2>/dev/null || true
-echo "✓ intel-microcode 清理完成"
-
-config_package_add intel-microcode
+#config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # 设置 FULLCONENAT（全锥形 NAT）
