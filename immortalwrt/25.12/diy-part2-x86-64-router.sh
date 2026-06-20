@@ -250,14 +250,18 @@ mv package/custom/golang feeds/packages/lang/
 # argon 主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 config_package_add luci-theme-argon
-#config_package_add luci-app-argon-config
+config_package_add luci-app-argon-config
+# Mihomo on OpenWrt
+#config_package_add luci-app-nikki
 # 内网穿透
 config_package_add luci-app-easytier
-config_package_add easytier
+#config_package_add easytier
 # 软硬路由公网神器
 config_package_add luci-app-lucky
 # adguardhome
 #config_package_add luci-app-adguardhome
+# mosdns
+config_package_add luci-app-mosdns
 # 上网时间控制NFT版
 config_package_add luci-app-nft-timecontrol
 # 定时任务
@@ -270,9 +274,3 @@ config_package_add luci-app-fileassistant
 #config_package_add luci-app-netwizard
 # smartdns
 #config_package_add luci-app-smartdns
-# mosdns
-#rm -rf feeds/packages/net/v2ray-geodata
-#git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-#git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-#clean_packages package/mosdns
-config_package_add luci-app-mosdns

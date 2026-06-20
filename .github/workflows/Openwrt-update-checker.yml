@@ -12,6 +12,10 @@ jobs:
       matrix:
         include:
           - repo: immortalwrt/immortalwrt
+            branch: openwrt-25.12
+            hash_key: immortalwrt_25.12_commitHash
+            event: immortalwrt_25.12-update
+          - repo: immortalwrt/immortalwrt
             branch: openwrt-24.10
             hash_key: immortalwrt_24.10_commitHash
             event: immortalwrt_24.10-update

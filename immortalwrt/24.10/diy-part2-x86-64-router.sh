@@ -42,20 +42,18 @@ function config_package_add(){
     config_add $package
 }
 
-function drop_package(){
-    if [ "$1" != "golang" ];then
-        # feeds/base -> package
-        find package/ -follow -name $1 -not -path "package/custom/*" | xargs -rt rm -rf
-        find feeds/ -follow -name $1 -not -path "feeds/base/custom/*" | xargs -rt rm -rf
-    fi
-}
 function clean_packages(){
-    path=$1
-    dir=$(ls -l ${path} | awk '/^d/ {print $NF}')
-    for item in ${dir}
-        do
-            drop_package ${item}
-        done
+    # $1: 源目录路径(如 package/mosdns)，遍历子目录作为包名，排除源目录子内容避免误删
+    local src_path="$1"
+    local src_dir_name=$(basename "$src_path")
+    local dir=$(ls -l ${src_path} | awk '/^d/ {print $NF}')
+    for name in ${dir}; do
+        if [ "$name" != "golang" ];then
+            # 排除源目录自身及其子内容，避免误删
+            find package/ -follow -name $name -not -path "${src_path}" -not -path "${src_path}/*" | xargs -rt rm -rf
+            find feeds/ -follow -name $name -not -path "feeds/base/${src_dir_name}" -not -path "feeds/base/${src_dir_name}/*" | xargs -rt rm -rf
+        fi
+    done
 }
 
 # Git稀疏克隆，只克隆指定目录到本地
@@ -146,12 +144,6 @@ done
 sed -i 's/root:::0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.::0:99999:7:::/g' package/base-files/files/etc/shadow
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.10.1/g' package/base-files/files/bin/config_generate
-# 添加编译时间到版本信息
-BUILD_DATE=$(TZ=UTC-8 date +"%Y%m%d")
-NEW_DESC="${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on ${BUILD_DATE}"
-#sed -i "s/DISTRIB_DESCRIPTION='.*'/DISTRIB_DESCRIPTION='${REPO_NAME} ${OpenWrt_VERSION} ${OpenWrt_ARCH} Built on $(date +%Y%m%d)'/" package/base-files/files/etc/openwrt_release
-sed -i "s/DISTRIB_DESCRIPTION=.*/DISTRIB_DESCRIPTION='${NEW_DESC}'/" package/base-files/files/etc/openwrt_release
-sed -i "/option description/s/.*/\toption description '${NEW_DESC}'/" package/base-files/files/etc/config/system
 # 添加编译时间到 /etc/banner
 sed -i '$ i\\ Build Time: '"$(date +%Y%m%d)"'' package/base-files/files/etc/banner
 
@@ -233,8 +225,6 @@ sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.
 #config_package_add luci-app-mwan3
 # kms
 config_package_add luci-app-vlmcsd
-# smartdns
-#config_package_add luci-app-smartdns
 # 应用过滤
 #config_package_add luci-app-appfilter
 # 内网穿透
