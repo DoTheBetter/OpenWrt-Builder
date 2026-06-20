@@ -273,13 +273,3 @@ config_package_add luci-app-taskplan
 config_package_add luci-app-fileassistant
 # 设置向导
 #config_package_add luci-app-netwizard
-
-############
-# Mihomo on OpenWrt
-#git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/nikki
-#config_package_add luci-app-nikki
-# mosdns
-rm -rf feeds/packages/net/v2ray-geodata
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-config_package_add luci-app-mosdns
