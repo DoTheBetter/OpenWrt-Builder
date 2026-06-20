@@ -184,7 +184,7 @@ config_package_del luci-app-rclone_INCLUDE_rclone-ng
 
 #### 新增
 # Firmware
-#config_package_add intel-microcode
+config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # 设置 FULLCONENAT（全锥形 NAT）
@@ -273,3 +273,11 @@ config_package_add luci-app-taskplan
 config_package_add luci-app-fileassistant
 # 设置向导
 #config_package_add luci-app-netwizard
+
+#####################
+# mosdns
+rm -rf feeds/packages/net/v2ray-geodata
+git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+clean_packages package/mosdns
+config_package_add luci-app-mosdns
