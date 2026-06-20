@@ -165,6 +165,7 @@ jobs:
           rm -rf *.manifest
           rm -rf *kernel.bin
           rm -rf *squashfs-rootfs.img.gz
+          rm -rf *targz-rootfs.tar.gz
           mv immortalwrt-${{ env.OpenWrt_ARCH }}-generic-rootfs.tar.gz immortalwrt-${{ env.OpenWrt_VERSION }}-${{ env.OpenWrt_ARCH }}-generic-rootfs-${{ env.COMPILE_DATE }}.tar.gz
           mv immortalwrt-${{ env.OpenWrt_ARCH }}-generic-squashfs-combined-efi.img.gz immortalwrt-${{ env.OpenWrt_VERSION }}-${{ env.OpenWrt_ARCH }}-generic-squashfs-combined-efi-${{ env.COMPILE_DATE }}.img.gz
           echo -e "------------------------------- 文件列表 -------------------------------"

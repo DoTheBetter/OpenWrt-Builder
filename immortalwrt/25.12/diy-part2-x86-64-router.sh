@@ -220,8 +220,6 @@ sed -i 's|/bin/login|/bin/login -f root|g' feeds/packages/utils/ttyd/files/ttyd.
 #config_package_add luci-app-mwan3
 # kms
 config_package_add luci-app-vlmcsd
-# smartdns
-#config_package_add luci-app-smartdns
 # 应用过滤
 #config_package_add luci-app-appfilter
 # 内网穿透
@@ -252,8 +250,7 @@ mv package/custom/golang feeds/packages/lang/
 # argon 主题
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 config_package_add luci-theme-argon
-config_package_add luci-app-argon-config
-
+#config_package_add luci-app-argon-config
 # 内网穿透
 config_package_add luci-app-easytier
 config_package_add easytier
@@ -271,11 +268,11 @@ config_package_add luci-app-taskplan
 config_package_add luci-app-fileassistant
 # 设置向导
 #config_package_add luci-app-netwizard
-
-#####################
+# smartdns
+#config_package_add luci-app-smartdns
 # mosdns
-rm -rf feeds/packages/net/v2ray-geodata
-git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
-git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-clean_packages package/mosdns
+#rm -rf feeds/packages/net/v2ray-geodata
+#git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+#git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
+#clean_packages package/mosdns
 config_package_add luci-app-mosdns
