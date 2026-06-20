@@ -49,9 +49,9 @@ function clean_packages(){
     local dir=$(ls -l ${src_path} | awk '/^d/ {print $NF}')
     for name in ${dir}; do
         if [ "$name" != "golang" ];then
-            # 排除源目录子内容，避免误删
-            find package/ -follow -name $name -not -path "${src_path}/*" | xargs -rt rm -rf
-            find feeds/ -follow -name $name -not -path "feeds/base/${src_dir_name}/*" | xargs -rt rm -rf
+            # 排除源目录自身及其子内容，避免误删
+            find package/ -follow -name $name -not -path "${src_path}" -not -path "${src_path}/*" | xargs -rt rm -rf
+            find feeds/ -follow -name $name -not -path "feeds/base/${src_dir_name}" -not -path "feeds/base/${src_dir_name}/*" | xargs -rt rm -rf
         fi
     done
 }
