@@ -25,7 +25,7 @@
 
 1. 修改路由LAN的IP：
 ```
-uci set network.lan.ipaddr='192.168.5.1' 
+uci set network.lan.ipaddr='192.168.5.1/24' 
 uci commit network
 ```
 
