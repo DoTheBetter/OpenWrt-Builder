@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: 检查服务器配置
@@ -137,12 +137,9 @@ jobs:
         run: |
           cp -rf openwrt/.config ${{ env.FIRMWARE }}/config
           cd ${{ env.FIRMWARE }}
+          # 只保留 ubootmod 的 bin 固件
+          find . -maxdepth 1 -type f ! -name "*xiaomi_redmi-router-ax6000-ubootmod*.bin" ! -name "sha256sums" ! -name "config" -delete
           rm -rf packages
-          rm -rf profiles.json
-          rm -rf *.buildinfo
-          rm -rf *.manifest
-          rm -rf *kernel.bin
-          rm -rf mt79*-ram*
           echo -e "------------------------------- 文件列表 -------------------------------"
           ls
 
