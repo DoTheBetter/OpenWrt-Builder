@@ -93,7 +93,8 @@ jobs:
       - name: 加载默认config
         run: |
           cd openwrt
-          cp -f defconfig/mt7986-ax6000.config .config
+          ls -l defconfig/
+          cp -f defconfig/mt7986-ax6000_dae.config .config
       
       - name: 加载自定义配置
         run: |
