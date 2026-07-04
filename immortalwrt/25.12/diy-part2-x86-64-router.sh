@@ -223,7 +223,7 @@ config_package_add luci-app-vlmcsd
 # 应用过滤
 #config_package_add luci-app-appfilter
 # 内网穿透
-config_package_add luci-app-zerotier
+#config_package_add luci-app-zerotier
 
 #硬件及驱动
 # 虚拟机支持
@@ -261,11 +261,11 @@ config_package_add luci-app-lucky
 # adguardhome
 #config_package_add luci-app-adguardhome
 # mosdns
-config_package_add luci-app-mosdns
+#config_package_add luci-app-mosdns
 # 上网时间控制NFT版
 config_package_add luci-app-nft-timecontrol
 # 定时任务
-config_package_add luci-app-taskplan
+#config_package_add luci-app-taskplan
 # 分区管理
 #config_package_add luci-app-partexp
 # 文件管理
