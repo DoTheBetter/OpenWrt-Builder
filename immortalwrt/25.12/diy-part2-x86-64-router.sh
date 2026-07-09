@@ -186,9 +186,9 @@ config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # 设置 FULLCONENAT（全锥形 NAT）
-config_package_add kmod-ipt-fullconenat
-config_package_add iptables-mod-fullconenat
-config_package_add ip6tables-mod-fullconenat
+#config_package_add kmod-ipt-fullconenat
+#config_package_add iptables-mod-fullconenat
+#config_package_add ip6tables-mod-fullconenat
 # luci
 config_package_add luci
 config_package_add default-settings-chn
@@ -211,6 +211,8 @@ config_package_add curl
 config_package_add unzip
 # upnp
 config_package_add luci-app-upnp
+# autoreboot
+#config_package_add luci-app-autoreboot
 # tty 终端
 config_package_add luci-app-ttyd
 # tty 免登录
@@ -240,6 +242,10 @@ config_package_add kmod-usb-serial-option
 config_package_add kmod-usb-net-rndis
 config_package_add kmod-usb-net-ipheth
 
+# 适用于 OpenWrt 的 SONiC 风格全锥形 NAT（Full Cone NAT）
+# https://github.com/mufeng05/openwrt-sonic-fullcone
+curl -sSL https://raw.githubusercontent.com/mufeng05/openwrt-sonic-fullcone/master/add_sonic_fullcone.sh | bash
+
 #### 第三方软件包
 mkdir -p package/custom
 git clone -b OpenWrt-25.x --single-branch --depth 1 https://github.com/DoTheBetter/OpenWrt_Packages.git package/custom
@@ -254,10 +260,10 @@ config_package_add luci-app-argon-config
 # Mihomo on OpenWrt
 #config_package_add luci-app-nikki
 # 内网穿透
-config_package_add luci-app-easytier
+#config_package_add luci-app-easytier
 #config_package_add easytier
 # 软硬路由公网神器
-config_package_add luci-app-lucky
+#config_package_add luci-app-lucky
 # adguardhome
 #config_package_add luci-app-adguardhome
 # mosdns
@@ -265,7 +271,7 @@ config_package_add luci-app-lucky
 # 上网时间控制NFT版
 config_package_add luci-app-nft-timecontrol
 # 定时任务
-#config_package_add luci-app-taskplan
+config_package_add luci-app-taskplan
 # 分区管理
 #config_package_add luci-app-partexp
 # 文件管理
