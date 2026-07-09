@@ -186,9 +186,9 @@ config_package_add intel-microcode
 # sing-box内核支持
 config_package_add kmod-netlink-diag
 # 设置 FULLCONENAT（全锥形 NAT）
-#config_package_add kmod-ipt-fullconenat
-#config_package_add iptables-mod-fullconenat
-#config_package_add ip6tables-mod-fullconenat
+config_package_add kmod-ipt-fullconenat
+config_package_add iptables-mod-fullconenat
+config_package_add ip6tables-mod-fullconenat
 # luci
 config_package_add luci
 config_package_add default-settings-chn
@@ -244,7 +244,18 @@ config_package_add kmod-usb-net-ipheth
 
 # 适用于 OpenWrt 的 SONiC 风格全锥形 NAT（Full Cone NAT）
 # https://github.com/mufeng05/openwrt-sonic-fullcone
-curl -sSL https://raw.githubusercontent.com/mufeng05/openwrt-sonic-fullcone/master/add_sonic_fullcone.sh | bash
+#curl -sSL https://raw.githubusercontent.com/mufeng05/openwrt-sonic-fullcone/master/add_sonic_fullcone.sh | bash
+# 1. 打开全局总开关（必须）
+#uci set firewall.@defaults[0].fullcone='1'
+# 2. 对 wan zone 启用 fullcone
+#uci set firewall.@zone[1].fullcone='1'
+# 3. 可选：仅对 UDP 启用（推荐用于游戏/P2P）
+#uci add_list firewall.@zone[1].fullcone_proto='udp'
+# 应用
+#uci commit firewall
+#/etc/init.d/firewall restart
+# 验证
+#nft list ruleset | grep fullcone
 
 #### 第三方软件包
 mkdir -p package/custom
@@ -257,17 +268,6 @@ mv package/custom/golang feeds/packages/lang/
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 config_package_add luci-theme-argon
 config_package_add luci-app-argon-config
-# Mihomo on OpenWrt
-#config_package_add luci-app-nikki
-# 内网穿透
-#config_package_add luci-app-easytier
-#config_package_add easytier
-# 软硬路由公网神器
-#config_package_add luci-app-lucky
-# adguardhome
-#config_package_add luci-app-adguardhome
-# mosdns
-#config_package_add luci-app-mosdns
 # 上网时间控制NFT版
 config_package_add luci-app-nft-timecontrol
 # 定时任务
@@ -280,3 +280,14 @@ config_package_add luci-app-fileassistant
 #config_package_add luci-app-netwizard
 # smartdns
 #config_package_add luci-app-smartdns
+# mosdns
+#config_package_add luci-app-mosdns
+# adguardhome
+#config_package_add luci-app-adguardhome
+# 软硬路由公网神器
+#config_package_add luci-app-lucky
+# Mihomo on OpenWrt
+#config_package_add luci-app-nikki
+# 内网穿透
+#config_package_add luci-app-easytier
+#config_package_add easytier
