@@ -195,7 +195,7 @@ config_package_add default-settings-chn
 # bbr
 config_package_add kmod-tcp-bbr
 # coremark cpu 跑分
-config_package_add coremark
+#config_package_add coremark
 # autocore + lm-sensors-detect： cpu 频率、温度
 config_package_add autocore
 config_package_add lm-sensors-detect
@@ -268,8 +268,8 @@ mv package/custom/golang feeds/packages/lang/
 sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
 config_package_add luci-theme-argon
 config_package_add luci-app-argon-config
-# 上网时间控制NFT版
-config_package_add luci-app-nft-timecontrol
+# 上网时间控制插件
+config_package_add luci-app-timecontrol
 # 定时任务
 #config_package_add luci-app-taskplan
 # 分区管理
@@ -291,3 +291,7 @@ config_package_add luci-app-fileassistant
 # 内网穿透
 #config_package_add luci-app-easytier
 #config_package_add easytier
+
+#网络速度测试
+git clone https://github.com/sirpdboy/luci-app-netspeedtest package/netspeedtest
+config_package_add luci-app-netspeedtest
