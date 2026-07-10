@@ -279,7 +279,7 @@ config_package_add luci-app-fileassistant
 # 设置向导
 #config_package_add luci-app-netwizard
 # smartdns
-#config_package_add luci-app-smartdns
+config_package_add luci-app-smartdns
 # mosdns
 #config_package_add luci-app-mosdns
 # adguardhome
