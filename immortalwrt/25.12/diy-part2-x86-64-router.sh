@@ -293,6 +293,5 @@ config_package_add luci-app-fileassistant
 #config_package_add easytier
 
 #网络速度测试
-rm -rf  ./feeds/packages/net/speedtest-cli   #删除原来老版本
-git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
+git clone --depth 1 --branch master --single-branch --no-checkout https://github.com/muink/luci-app-netspeedtest.git package/luci-app-netspeedtest
 config_package_add luci-app-netspeedtest
