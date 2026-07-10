@@ -294,4 +294,8 @@ config_package_add luci-app-fileassistant
 
 #网络速度测试
 git clone --depth 1 --branch master --single-branch --no-checkout https://github.com/muink/luci-app-netspeedtest.git package/luci-app-netspeedtest
+pushd package/luci-app-netspeedtest
+umask 022
+git checkout
+popd
 config_package_add luci-app-netspeedtest
