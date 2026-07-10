@@ -294,5 +294,5 @@ config_package_add luci-app-fileassistant
 
 #网络速度测试
 rm -rf  ./feeds/packages/net/speedtest-cli   #删除原来老版本
-git clone https://github.com/sirpdboy/luci-app-netspeedtest package/netspeedtest
+git clone https://github.com/sirpdboy/netspeedtest.git package/netspeedtest
 config_package_add luci-app-netspeedtest
