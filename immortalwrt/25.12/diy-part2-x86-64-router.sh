@@ -279,6 +279,8 @@ config_package_add luci-app-fileassistant
 # 设置向导
 #config_package_add luci-app-netwizard
 # smartdns
+# 临时禁用 smartdns 哈希验证
+sed -i 's/^PKG_MIRROR_HASH=.*/PKG_MIRROR_HASH:=skip/' package/custom/smartdns/Makefile || true
 config_package_add luci-app-smartdns
 # mosdns
 #config_package_add luci-app-mosdns
