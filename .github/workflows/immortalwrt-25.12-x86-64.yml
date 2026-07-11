@@ -61,11 +61,18 @@ jobs:
       - name: 初始化编译环境
         env:
           DEBIAN_FRONTEND: noninteractive
+        timeout-minutes: 60
         run: |
           sudo -E apt-get -qq update
           sudo bash -c 'bash <(curl -s https://build-scripts.immortalwrt.org/init_build_environment.sh)'
-          sudo -E apt-get -qq autoremove --purge
-          sudo -E apt-get -qq clean
+          
+          # 加入超时控制和错误处理
+          sudo timeout 600 apt-get -qq autoremove --purge 2>/dev/null || true
+          sudo timeout 300 apt-get -qq clean 2>/dev/null || true
+          
+          # 清理可能的锁定文件
+          sudo rm -f /var/lib/apt/lists/lock 2>/dev/null || true
+          
           sudo timedatectl set-timezone "${TZ}"
           sudo mkdir -p /workdir
           sudo chown $USER:$GROUPS /workdir
